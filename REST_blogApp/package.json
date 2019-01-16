@@ -1,0 +1,25 @@
+{
+  "name": "rest_blog_app",
+  "version": "1.0.0",
+  "description": "demonstrating RESTful routing with a blog app, using Semantic UI for css styling",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BCshirdavani/RESTful_routing.git"
+  },
+  "author": "shybo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BCshirdavani/RESTful_routing/issues"
+  },
+  "homepage": "https://github.com/BCshirdavani/RESTful_routing#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.4"
+  }
+}

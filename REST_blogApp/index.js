@@ -55,7 +55,15 @@ app.get("/", function(req, res){
 });
 // setup route for '/blogs'
 app.get("/blogs", function(req, res){
-   res.render("index.ejs"); 
+    // find all the data
+    Blog.find({}, function(error, blogs){
+        if(error){
+            console.log("error: ", error);
+        } else {
+            // render the page, with the data = blogs
+            res.render("index.ejs", {blogs: blogs}); 
+        }
+    });
 });
 
 

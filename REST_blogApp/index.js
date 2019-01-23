@@ -5,13 +5,15 @@ var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
+mongoose.set("useFindAndModify", false);    // shoudl fix deprecation warning...
+var methodOverride = require("method-override"); // POST to PUT override in edit.ejs
 
 
 mongoose.connect("mongodb://localhost:27017/rest_blog_app", { useNewUrlParser: true });
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));                      // enable serving of custom style sheet
-
+app.use(methodOverride("_method")); // POST to PUT override in edit.ejs
 
 
 //==================================================================== DATA
@@ -71,10 +73,6 @@ app.get("/blogs/new", function(req, res){
     res.render("new");
 });
 
-
-
-
-
 //-------------------------------------------------------- CREATE
 app.post("/blogs", function(req, res){
     // create blog - data is held in 'req.body.blog' - taken from the new.ejs form
@@ -88,8 +86,55 @@ app.post("/blogs", function(req, res){
     });
 });
 
+//-------------------------------------------------------- SHOW
+app.get("/blogs/:id", function(req, res){
+    Blog.findById(req.params.id, function(error, foundBlog){
+        console.log("show route");
+        console.log("req.params.id: ", req.params.id);
+        console.log("req.params: ", req.params);
+        if(error){
+            console.log("error: ", error);
+            console.log("redirecting back to index");
+            res.redirect("/blogs");
+        } else {
+            res.render("show", {blog: foundBlog});
+        }
+    });
+});
 
 
+//-------------------------------------------------------- EDIT
+app.get("/blogs/:id/edit", function(req, res){
+    Blog.findById(req.params.id, function(error, foundBlog){
+        console.log("edit route");
+        if(error){
+           res.redirect("/blogs");
+           console.log("error: ", error);
+        } else{
+            res.render("edit", {blog: foundBlog});
+        }
+    });
+});
+
+
+
+
+//-------------------------------------------------------- UPDATE
+app.put("/blogs/:id", function(req, res){
+    // var query = {_id: req.params.id};
+    // Blog.findOneAndUpdate(query, req.body.blog, {new: true}, function(error, updatedBlog){
+    Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(error, updatedBlog){
+    console.log("update route");
+        if(error){
+            res.redirect("/blogs");
+            console.log("error: ", error);
+        } else{
+            console.log("req.params.id = ", req.params.id);
+            console.log("about to res.render : /blogs/" + req.params.id);
+            res.redirect("/blogs/" + req.params.id);
+        }
+    });
+});
 
 
 
